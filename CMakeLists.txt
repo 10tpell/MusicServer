@@ -6,7 +6,8 @@ enable_testing()
 
 include_directories("./inc")
 
-add_executable(MusicServer main.c src/cmd.c src/server.c)
+add_executable(MusicServer main.c src/cmd.c src/server.c src/server_commands.c)
+add_compile_options(-g)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
