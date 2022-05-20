@@ -1,0 +1,1 @@
+/usr/bin/gcc -g -rdynamic CMakeFiles/MusicServer.dir/main.c.o CMakeFiles/MusicServer.dir/src/cmd.c.o CMakeFiles/MusicServer.dir/src/server.c.o -o MusicServer 

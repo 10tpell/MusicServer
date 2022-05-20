@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/travis/Code/MusicServer/build",
+  "command": "/usr/bin/gcc  -I/home/travis/Code/MusicServer/./inc -g -o CMakeFiles/MusicServer.dir/main.c.o -c /home/travis/Code/MusicServer/main.c",
+  "file": "/home/travis/Code/MusicServer/main.c"
+},
+{
+  "directory": "/home/travis/Code/MusicServer/build",
+  "command": "/usr/bin/gcc  -I/home/travis/Code/MusicServer/./inc -g -o CMakeFiles/MusicServer.dir/src/cmd.c.o -c /home/travis/Code/MusicServer/src/cmd.c",
+  "file": "/home/travis/Code/MusicServer/src/cmd.c"
+},
+{
+  "directory": "/home/travis/Code/MusicServer/build",
+  "command": "/usr/bin/gcc  -I/home/travis/Code/MusicServer/./inc -g -o CMakeFiles/MusicServer.dir/src/server.c.o -c /home/travis/Code/MusicServer/src/server.c",
+  "file": "/home/travis/Code/MusicServer/src/server.c"
+}
+]
