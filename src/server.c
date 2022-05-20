@@ -45,6 +45,7 @@ void * connection_hndl(void * sock) {
     char * msg, msg_buf[SERVER_MESSAGE_MAX_LEN];
     int msg_len;
 
+    char * play_cmd = "play";
     int con_sock_desc = *(int *)sock;
 
     printf("in thread\n");
@@ -54,7 +55,10 @@ void * connection_hndl(void * sock) {
 
     while(msg_len = recv(con_sock_desc, msg_buf, SERVER_MESSAGE_MAX_LEN, 0)) {
         if(msg_len <= 0) break;
-        printf("Recieved msg: %s\n", msg_buf);
+        printf("Recieved msg: %s (size: %d)\n", msg_buf, (int) strlen(msg_buf));
+        if(memcmp(msg_buf, play_cmd, 1) == 0) {
+            printf("playing: %s \n", ((char *)msg_buf + strlen(play_cmd)+1));
+        }
     }
 
     if (msg_len == 0) {
