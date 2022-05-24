@@ -15,6 +15,7 @@ void music_stop();
 void music_resume();
 void music_pause();
 void music_play();
+void music_close();
 int music_openFile();
 int music_isPlaying();
 

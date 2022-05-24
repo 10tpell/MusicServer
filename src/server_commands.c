@@ -1,5 +1,6 @@
 #include "server_commands.h"
 #include "music.h"
+#include "global_cfg.h"
 
 server_command cmd_list[] = {
     { "play", &play_music, 1 },
@@ -10,8 +11,8 @@ server_command cmd_list[] = {
     { "close", &close_srv, 0}
 };
 
-void play_music(char* filename) {
-    printf("playing: %s \n", filename);
+void play_music(void * filename) {
+    if(verbose_b) printf("playing: %s \n", filename);
     if(music_isPlaying()) {
         res_music();
         return;
@@ -22,19 +23,19 @@ void play_music(char* filename) {
 }
 
 void pause_music() {
-    printf("pausing tune\n");
+    if(verbose_b) printf("pausing tune\n");
     music_pause();
     return;
 }
 
 void res_music() {
-    printf("Resuming playback");
+    if(verbose_b) printf("Resuming playback");
     music_resume();
     return;
 }
 
 void stop_music() {
-    printf("Stopping playback \n");
+    if(verbose_b) printf("Stopping playback \n");
     music_stop();
     return;
 }

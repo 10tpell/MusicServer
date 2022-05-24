@@ -1,5 +1,6 @@
 #include "server.h"
 #include "server_commands.h"
+#include "global_cfg.h"
 
 int server_start(int port) {
     int ret, sock_desc, new_sock, * sock_new;
@@ -16,24 +17,24 @@ int server_start(int port) {
         server.sin_family = AF_INET;
         server.sin_addr.s_addr = INADDR_ANY;
         server.sin_port = htons(port);
-        printf("Opened Socket: %d\n", sock_desc);
+        if(verbose_b) printf("Opened Socket: %d\n", sock_desc);
         ret = bind(sock_desc, (const struct sockaddr *) &server, (socklen_t) sizeof(server));
         if (ret >= 0) {
-            printf("Binded to port: %d, status: %d, socket: %d\n", port, ret, sock_desc);
+            if(verbose_b) printf("Binded to port: %d, status: %d, socket: %d\n", port, ret, sock_desc);
             
             /* Bound to socket, now listen for messages */
             ret = listen(sock_desc, 10);
             if (ret >= 0) {
-                printf("Listening.... status: %d\n", ret);
+                if(verbose_b) printf("Listening.... status: %d\n", ret);
 
                 /* wait for a new connection from client, upon new connection start a new thread to handle connection */
                 cl_size = (socklen_t) sizeof(client);
                 while(new_sock = accept(sock_desc, (struct sockaddr *) &client, &cl_size)) {
-                    printf("Connection accepted...\n");
+                    printf("New connection accepted...\n");
 
                     sock_new = malloc(1);
                     *sock_new = new_sock;
-                    printf("socket created\n");
+                    if(verbose_b) printf("socket created\n");
                     if(pthread_create(&sock_thread, NULL, connection_hndl, (void *) sock_new) < 0) {
                         printf("ERROR: FAILED TO START THREAD\n");
                         return -1;
@@ -55,7 +56,6 @@ void * connection_hndl(void * sock) {
     int con_sock_desc = *(int *)sock;
     int cmd_valid = 0;
 
-    printf("in thread\n");
     msg = "Connected to music server!\n";
     write(con_sock_desc, msg, strlen(msg));
 
@@ -65,7 +65,7 @@ void * connection_hndl(void * sock) {
 
 
         cmd_valid = 0; /* used to determine later if the command supplied is valid */
-        printf("Recieved msg: %s (size: %d)\n", msg_buf, (int) strlen(msg_buf));
+        if(verbose_b) printf("Recieved msg: %s (size: %d)\n", msg_buf, (int) strlen(msg_buf));
 
         /* loop through list of possible commands */
         for (int i=0; i<sizeof(cmd_list)/sizeof(server_command); i++) {

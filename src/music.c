@@ -2,7 +2,6 @@
 
 static int driver_id = 0;
 static int music_play_b = 0;
-static int thread_ex = 0;
 static int paused_b = 0;
 
 static SNDFILE * snd_file = NULL;
@@ -24,10 +23,12 @@ int music_openFile(char * fileName) {
     SF_INFO audio_info = {};
     ao_sample_format format;
 
+    /* open file using libsnd so that we can read the audio info */
     snd_file = sf_open(fileName, SFM_READ, &audio_info);
-    printf("FILE POINTER: %d \n", snd_file);
-    printf("FILE FORMAT: %x \n", audio_info.format);
+    // printf("FILE POINTER: %d \n", snd_file);
+    // printf("FILE FORMAT: %x \n", audio_info.format);
 
+    /* fill out all of the info libao requires */
     format.channels = audio_info.channels;
     format.rate = audio_info.samplerate;
     format.byte_format = AO_FMT_NATIVE;
@@ -54,16 +55,19 @@ int music_openFile(char * fileName) {
             break;  
     }
 
+    /* open the music device ready for playback */
     music_device = ao_open_live(driver_id, &format, (ao_option *) NULL);
 
     return 0;
 }
 
 void music_play(void) {
-    if(thread_ex) {
-        return;
+    /* make sure that a music player is not already open (music_play_b does not 100% represent
+       whether the thread is running or not, but it's good enough)*/
+    if(!music_play_b) {
+        pthread_create(player_thread, NULL, player_thread_hndl, NULL);
     }
-    pthread_create(&player_thread, NULL, player_thread_hndl, NULL);
+    return;
 }
 
 void player_thread_hndl(void) {
@@ -74,8 +78,9 @@ void player_thread_hndl(void) {
 
     while(music_play_b) {
         if(!paused_b) {
+            /* read in music MUSIC_BUFFER_SIZE amount of bytes at a time, then play it */
             int sf_read = sf_read_short(snd_file, audio_buffer, MUSIC_BUFFER_SIZE);
-            if(ao_play(music_device, audio_buffer, sf_read * sizeof(short)) == 0) {
+            if(ao_play(music_device, (char *) audio_buffer, sf_read * sizeof(short)) == 0) {
                 break;
             }
         }
@@ -104,6 +109,7 @@ void music_resume(void) {
     return;
 }
 
+/* Need to clean up memory allocated for music libraries */
 void music_close(void) {
     music_stop();
     pthread_join(*player_thread, NULL);

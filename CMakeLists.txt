@@ -8,7 +8,7 @@ include_directories("./inc")
 
 
 link_libraries(ao sndfile)
-add_executable(MusicServer main.c src/cmd.c src/server.c src/server_commands.c src/music.c)
+add_executable(MusicServer main.c src/cmd.c src/server.c src/server_commands.c src/music.c src/files.c)
 add_compile_options(-g)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

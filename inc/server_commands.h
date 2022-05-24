@@ -9,7 +9,7 @@ typedef struct server_command {
     int n_params;
 } server_command;
 
-void play_music(char* filename);
+void play_music(void * filename);
 void res_music();
 void pause_music();
 void stop_music();
