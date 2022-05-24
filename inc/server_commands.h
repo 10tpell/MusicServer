@@ -16,4 +16,6 @@ void stop_music();
 void list_tracks();
 void close_srv();
 
+extern server_command cmd_list[6];
+
 #endif /* SERVER_CMDS_H */
