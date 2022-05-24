@@ -1,5 +1,3 @@
-src/cmd.c
-resources/test_file_lst.txt
 resources/test.wav
 .vscode/launch.json
 .vscode/tasks.json
