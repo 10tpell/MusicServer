@@ -14,5 +14,6 @@ void res_music();
 void pause_music();
 void stop_music();
 void list_tracks();
+void close_srv();
 
 #endif /* SERVER_CMDS_H */

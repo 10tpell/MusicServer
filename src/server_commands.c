@@ -33,3 +33,8 @@ void stop_music() {
 void list_tracks() {
     return;
 }
+
+void close_srv() {
+    music_close();
+    exit(0);
+}

@@ -81,7 +81,6 @@ void player_thread_hndl(void) {
         }
     }
     free(audio_buffer);
-
     return;
 }
 
@@ -107,6 +106,7 @@ void music_resume(void) {
 
 void music_close(void) {
     music_stop();
+    pthread_join(*player_thread, NULL);
     ao_close(music_device);
     sf_close(snd_file);
     music_deinit();

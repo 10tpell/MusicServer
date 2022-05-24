@@ -6,7 +6,8 @@ static server_command cmd_list[] = {
     { "pause", &pause_music, 0},
     { "list tracks", &list_tracks, 0},
     { "stop", &stop_music, 0},
-    { "resume", &res_music, 0}
+    { "resume", &res_music, 0},
+    { "close", &close_srv, 0}
 };
 
 int server_start(int port) {
