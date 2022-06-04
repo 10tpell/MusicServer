@@ -2,8 +2,10 @@
 #include "server_commands.h"
 #include "global_cfg.h"
 
+static int sock_desc;
+
 int server_start(int port) {
-    int ret, sock_desc, new_sock, * sock_new;
+    int ret, new_sock, * sock_new;
     struct sockaddr_in server, client;
     socklen_t cl_size;
     pthread_t sock_thread;
@@ -47,6 +49,10 @@ int server_start(int port) {
     }
 
     return ret;
+}
+
+void server_close() {
+    close(sock_desc);
 }
 
 void * connection_hndl(void * sock) {

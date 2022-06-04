@@ -3,7 +3,8 @@
 #include "global_cfg.h"
 
 server_command cmd_list[] = {
-    { "play", &play_music, 1 },
+    { "play filepath", &play_music_path, 1 },
+    { "play id", &play_music_id, 1},
     { "pause", &pause_music, 0},
     { "list tracks", &list_tracks, 0},
     { "stop", &stop_music, 0},
@@ -11,8 +12,8 @@ server_command cmd_list[] = {
     { "close", &close_srv, 0}
 };
 
-void play_music(void * filename) {
-    if(verbose_b) printf("playing: %s \n", filename);
+void play_music_path(void * filename) {
+    if(verbose_b) printf("playing: %s \n", (char *) filename);
     if(music_isPlaying()) {
         res_music();
         return;
@@ -20,6 +21,17 @@ void play_music(void * filename) {
     music_openFile("/home/travis/Code/MusicServer/resources/test.wav");
     music_play();
     return;
+}
+
+void play_music_id(void * fileId) {
+    char * filePath;
+
+    int id = atoi((char *)fileId);
+    if(cfg_getFilePathFromId(&filePath, id) == 0) {
+        play_music_path(filePath);  
+    }
+    free(filePath);
+    return;  
 }
 
 void pause_music() {

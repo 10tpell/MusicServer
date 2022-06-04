@@ -37,8 +37,13 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
     while(ch != EOF) {
         if (ch == n) {
             if (current_cfg_param == MUSIC_FILEPATH) {
-                cfg->music_list[line_num].filepath = malloc(tmp_x_idx);
+                /* TODO: work out where this should be freed */
+                cfg->music_list[line_num].filepath = malloc(tmp_x_idx+1);
                 memcpy(cfg->music_list[line_num].filepath, file_str, tmp_x_idx);
+                
+                /* adding a zero at the end of the filepath string so that we can use strcpy later on */
+                *(cfg->music_list[line_num].filepath + tmp_x_idx+1) = 0;
+
                 tmp_x_idx = 0;
             }
             line_num++;

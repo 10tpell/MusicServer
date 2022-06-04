@@ -6,7 +6,7 @@ static int paused_b = 0;
 
 static SNDFILE * snd_file = NULL;
 static ao_device * music_device = NULL;
-static pthread_t * player_thread = NULL;
+static pthread_t player_thread = NULL;
 
 int music_init(void) {
     ao_initialize();
@@ -65,7 +65,7 @@ void music_play(void) {
     /* make sure that a music player is not already open (music_play_b does not 100% represent
        whether the thread is running or not, but it's good enough)*/
     if(!music_play_b) {
-        pthread_create(player_thread, NULL, player_thread_hndl, NULL);
+        pthread_create(&player_thread, NULL, player_thread_hndl, NULL);
     }
     return;
 }
@@ -112,7 +112,7 @@ void music_resume(void) {
 /* Need to clean up memory allocated for music libraries */
 void music_close(void) {
     music_stop();
-    pthread_join(*player_thread, NULL);
+    pthread_join(player_thread, NULL);
     ao_close(music_device);
     sf_close(snd_file);
     music_deinit();

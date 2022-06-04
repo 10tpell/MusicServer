@@ -16,5 +16,6 @@
 void * connection_hndl(void * sock);
 
 int server_start(int port);
+void server_close();
 
 #endif /* SERVER_H */
