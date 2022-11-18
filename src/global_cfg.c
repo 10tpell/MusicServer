@@ -8,6 +8,20 @@
 ************************************************************************************************/
 int verbose_b = 0;
 files_music_list * music_list;
+global_cfg glb_cfg = {
+    2,
+    {"wav", "mp3"} /* TODO: Fix this (BROKEN) */
+};
+
+void cfg_addFile(char * filePath) {
+    if (music_list->len < music_list->capacity) {
+        strcpy(music_list->music_list[music_list->len].filepath, filePath);
+        music_list->music_list[music_list->len].id = music_list->music_list[music_list->len-1].id + 1;
+        music_list->len++;
+    } else {
+        /* TODO: handle increasing music capacity */
+    }
+}
 
 int cfg_getFilePathFromId(char * * filePath, int id) {
     int ret = 1;

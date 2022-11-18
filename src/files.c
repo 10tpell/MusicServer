@@ -1,6 +1,36 @@
 #include "files.h"
 #include "global_cfg.h"
 
+int files_searchDir(char * dirPath, files_music_list * cfg) {
+    DIR *dr;
+    struct dirent * en;
+
+    char * filepath = malloc(PATH_MAX * sizeof(char));
+    char * fileExt = malloc(8*sizeof(char));
+
+    dr = opendir(dirPath);
+    if(dr) {
+        en = readdir(dr);
+        while (en != NULL) {
+            sprintf(filepath, "%s/%s", dirPath, en->d_name);
+            if (files_isDir(filepath)) {
+                printf("Directory: %s\n", filepath);
+            } else {
+                files_getFileExtension(filepath, fileExt);
+                for (int i=0; i<glb_cfg.num_of_extensions; i++) {
+                    if (strcmp(fileExt, glb_cfg.allowed_extensions[i]) == 0) {
+                        cfg_addFile(filepath);
+                        printf("Found new file: %s\n", filepath);
+                    }
+                }
+                printf("File: %s, extension: %s\n", filepath, fileExt);
+            }
+            en = readdir(dr);
+        }
+    }
+    return 0;
+}
+
 int files_parseFileList(char * filePath, files_music_list * cfg) {
     FILE * file_ptr;
     char ch;
@@ -28,7 +58,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
     } 
 
     file_str = malloc(FILE_PATH_MAX_LEN);
-    cfg->music_list = malloc(cfg->len * sizeof(files_music_cfg));
+    cfg->music_list = malloc(cfg->capacity * sizeof(files_music_cfg));
 
     line_num = 0;
     tmp_x_idx = 0;
@@ -38,15 +68,15 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
         if (ch == n) {
             if (current_cfg_param == MUSIC_FILEPATH) {
                 /* TODO: work out where this should be freed */
-                cfg->music_list[line_num].filepath = malloc(tmp_x_idx+1);
-                memcpy(cfg->music_list[line_num].filepath, file_str, tmp_x_idx);
+                cfg->music_list[cfg->len].filepath = malloc(tmp_x_idx+1);
+                memcpy(cfg->music_list[cfg->len].filepath, file_str, tmp_x_idx);
                 
                 /* adding a zero at the end of the filepath string so that we can use strcpy later on */
-                *(cfg->music_list[line_num].filepath + tmp_x_idx+1) = 0;
+                *(cfg->music_list[cfg->len].filepath + tmp_x_idx+1) = 0;
 
                 tmp_x_idx = 0;
+                cfg->len++;
             }
-            line_num++;
             current_cfg_param = MUSIC_ID;
             ch = fgetc(file_ptr);
             continue;
@@ -68,8 +98,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
         ch = fgetc(file_ptr);
     }
     free(file_str);
-    cfg->music_list = realloc(cfg->music_list, line_num * sizeof(files_music_cfg));
-    cfg->len = line_num;
+    cfg->music_list = realloc(cfg->music_list, cfg->len * sizeof(files_music_cfg));
 
     return 0;
 }
@@ -83,4 +112,25 @@ int files_saveMusicListToFile(files_music_list * cfg, char * filePath) {
     }
     fclose(file_ptr);
     return 0;
+}
+
+int files_isDir(char * dirPath) {
+    struct stat st;
+
+    if (stat(dirPath, &st) != 0) {
+        return 0;
+    }
+    return S_ISDIR(st.st_mode);
+}
+
+int files_getFileExtension(char * filePath, char * extension) {
+    int i;
+
+    for (i=0; i<strlen(filePath); i++) {
+        if (filePath[i] == 46) break;
+    }
+    
+    if (i == strlen(filePath) - 1) return 0;
+    strcpy(extension, (char *) (filePath+(i+1)));
+    return 1;
 }
