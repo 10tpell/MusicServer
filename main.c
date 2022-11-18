@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include "cmd.h"
+#include "db.h"
 #include "server.h"
 #include "music.h"
 #include "files.h"

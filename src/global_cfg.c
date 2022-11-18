@@ -8,9 +8,10 @@
 ************************************************************************************************/
 int verbose_b = 0;
 files_music_list * music_list;
+
 global_cfg glb_cfg = {
     2,
-    {"wav", "mp3"} /* TODO: Fix this (BROKEN) */
+    { "wav", "mp3" } /* TODO: Fix this (BROKEN) */
 };
 
 void cfg_addFile(char * filePath) {

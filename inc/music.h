@@ -7,7 +7,7 @@
 
 #define MUSIC_BUFFER_SIZE 8192
 
-void player_thread_hndl(void);
+void * player_thread_hndl(void *);
 
 int music_init();
 void music_deinit();

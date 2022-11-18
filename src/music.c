@@ -6,7 +6,7 @@ static int paused_b = 0;
 
 static SNDFILE * snd_file = NULL;
 static ao_device * music_device = NULL;
-static pthread_t player_thread = NULL;
+static pthread_t player_thread = (pthread_t) NULL;
 
 int music_init(void) {
     ao_initialize();
@@ -70,7 +70,8 @@ void music_play(void) {
     return;
 }
 
-void player_thread_hndl(void) {
+void * player_thread_hndl(void * args) {
+    (void) args;
     short * audio_buffer;
 
     audio_buffer = calloc(MUSIC_BUFFER_SIZE, sizeof(short));
@@ -86,7 +87,7 @@ void player_thread_hndl(void) {
         }
     }
     free(audio_buffer);
-    return;
+    pthread_exit(NULL);
 }
 
 void music_deinit(void) {

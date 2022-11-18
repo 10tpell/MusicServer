@@ -21,7 +21,7 @@ typedef struct {
 /* General global config */
 typedef struct {
     int num_of_extensions;
-    char ** allowed_extensions;
+    char * allowed_extensions[];
 } global_cfg;
 /************************************************************************************************
  *  Global Variables

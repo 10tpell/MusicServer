@@ -13,7 +13,7 @@ static int callback (void * a, int b, char ** c, char ** d) {
 static int db_execQuery(char * query, char * err) {
     if (db == 0) return -1;
 
-    sqlite3_exec(db, query, callback, 0, err);
+    sqlite3_exec(db, query, callback, 0, &err);
 
     return 0;
 }
