@@ -77,11 +77,17 @@ void * connection_hndl(void * sock) {
         for (int i=0; i<sizeof(cmd_list)/sizeof(server_command); i++) {
             if(memcmp(msg_buf, cmd_list[i].cmd_name, strlen(cmd_list[i].cmd_name)) == 0) {
                 /* user entered a valid command, now it must be handled */
+                if(verbose_b) printf("Valid command.\n");
                 if(cmd_list[i].n_params == 0) {
                     cmd_list[i].cmd_hndl(NULL);
                 } else {
                     cmd_list[i].cmd_hndl(((char *)msg_buf + strlen(cmd_list[i].cmd_name)+1));
                 }
+
+                /* set buffer back to 0 otherwise remnants of previous commands stay in the buffer
+                not necessary but doesn't look good if printing out */
+                memset(msg_buf, 0, SERVER_MESSAGE_MAX_LEN);
+                
                 cmd_valid = 1;
             }
         }

@@ -25,12 +25,11 @@ void play_music_path(void * filename) {
 
 void play_music_id(void * fileId) {
     char * filePath;
-
+    printf("char: %c\n", fileId);
     int id = atoi((char *)fileId);
     if(cfg_getFilePathFromId(&filePath, id) == 0) {
         play_music_path(filePath);  
     }
-    free(filePath);
     return;  
 }
 
