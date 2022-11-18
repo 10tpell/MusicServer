@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
     
     signal(SIGINT, handle_int);
 
+    db_init();
     music_init();
     server_start(options.port);
     music_close();

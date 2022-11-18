@@ -19,7 +19,8 @@ static int db_execQuery(char * query, char * err) {
 }
 
 int db_init() {
-    if (sqlite3_open("./db/MusicServer.db", &db) == 1) return -1;
+    if (sqlite3_initialize() != SQLITE_OK) return -1;  /* initialise sqlite3 */
+    if (sqlite3_open("./db/MusicServer.db", &db) == 1) return -1; /* open or create database */
     return 0;  
 }
 
