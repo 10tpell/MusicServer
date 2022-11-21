@@ -1,4 +1,5 @@
 #include "music.h"
+#include "errors.h"
 
 static int driver_id = 0;
 static int music_play_b = 0;
@@ -12,7 +13,7 @@ int music_init(void) {
     ao_initialize();
     driver_id = ao_default_driver_id();
     if(driver_id == -1) return -1;
-    return 0;
+    return RET_NO_ERR;
 }
 
 int music_isPlaying() {
@@ -58,7 +59,7 @@ int music_openFile(char * fileName) {
     /* open the music device ready for playback */
     music_device = ao_open_live(driver_id, &format, (ao_option *) NULL);
 
-    return 0;
+    return RET_NO_ERR;
 }
 
 void music_play(void) {

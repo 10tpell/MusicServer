@@ -1,10 +1,14 @@
 #include "cmd.h"
 #include "files.h"
 #include "global_cfg.h"
+#include "errors.h"
 
 int parse_args(int argc, char * argv[], arg_options * opts) {
     unsigned int i,x,y;
+    
     music_list = malloc((1000 * (sizeof(char *) + sizeof(int))) + sizeof(int));
+    if (music_list <= 0) return RET_ERR_MALLOC;
+    
     music_list->capacity = 1000;
     music_list->len = 0;
 
@@ -26,5 +30,5 @@ int parse_args(int argc, char * argv[], arg_options * opts) {
         }
     }
 
-    return 0;
+    return RET_NO_ERR;
 }

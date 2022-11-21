@@ -1,4 +1,5 @@
 #include "global_cfg.h"
+#include "errors.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -33,6 +34,8 @@ int cfg_getFilePathFromId(char * * filePath, int id) {
 
             /* for some reason it requires a pointer to a pointer for this? */
             *filePath = malloc(strlen(music_list->music_list[i].filepath) * sizeof(char));
+            if(*filePath < 1) return RET_ERR_MALLOC;
+
             strcpy(*filePath, music_list->music_list[i].filepath);
 
             /* break wasn't working here for some reason */

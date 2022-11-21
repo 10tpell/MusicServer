@@ -1,6 +1,7 @@
 #include "server.h"
 #include "server_commands.h"
 #include "global_cfg.h"
+#include "errors.h"
 
 static int sock_desc;
 
@@ -35,6 +36,8 @@ int server_start(int port) {
                     printf("New connection accepted...\n");
 
                     sock_new = malloc(1);
+                    if(sock_new < 1) return RET_ERR_MALLOC;
+
                     *sock_new = new_sock;
                     if(verbose_b) printf("socket created\n");
                     if(pthread_create(&sock_thread, NULL, connection_hndl, (void *) sock_new) < 0) {
@@ -108,5 +111,5 @@ void * connection_hndl(void * sock) {
     }
     close(con_sock_desc);
     free(sock);
-    return 0;
+    return RET_NO_ERR;
 }

@@ -1,5 +1,6 @@
 #include "files.h"
 #include "global_cfg.h"
+#include "errors.h"
 
 int files_searchDir(char * dirPath, files_music_list * cfg) {
     DIR *dr;
@@ -7,6 +8,7 @@ int files_searchDir(char * dirPath, files_music_list * cfg) {
 
     char * filepath = malloc(PATH_MAX * sizeof(char));
     char * fileExt = malloc(8*sizeof(char));
+    if((filepath < 1) || (fileExt < 1)) return RET_ERR_MALLOC;
 
     dr = opendir(dirPath);
     if(dr) {
@@ -28,7 +30,7 @@ int files_searchDir(char * dirPath, files_music_list * cfg) {
             en = readdir(dr);
         }
     }
-    return 0;
+    return RET_NO_ERR;
 }
 
 int files_parseFileList(char * filePath, files_music_list * cfg) {
@@ -59,6 +61,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
 
     file_str = malloc(FILE_PATH_MAX_LEN);
     cfg->music_list = malloc(cfg->capacity * sizeof(files_music_cfg));
+    if((file_str < 1) || (cfg->music_list < 1)) return RET_ERR_MALLOC;
 
     line_num = 0;
     tmp_x_idx = 0;
@@ -69,6 +72,8 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
             if (current_cfg_param == MUSIC_FILEPATH) {
                 /* TODO: work out where this should be freed */
                 cfg->music_list[cfg->len].filepath = malloc(tmp_x_idx+1);
+                if(cfg->music_list[cfg->len].filepath < 1) return RET_ERR_MALLOC;
+
                 memcpy(cfg->music_list[cfg->len].filepath, file_str, tmp_x_idx);
                 
                 /* adding a zero at the end of the filepath string so that we can use strcpy later on */
@@ -100,7 +105,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
     free(file_str);
     cfg->music_list = realloc(cfg->music_list, cfg->len * sizeof(files_music_cfg));
 
-    return 0;
+    return RET_NO_ERR;
 }
 
 int files_saveMusicListToFile(files_music_list * cfg, char * filePath) {
@@ -111,14 +116,14 @@ int files_saveMusicListToFile(files_music_list * cfg, char * filePath) {
         fprintf(file_ptr, "%d,%s\n", cfg->music_list[i].id, cfg->music_list[i].filepath);
     }
     fclose(file_ptr);
-    return 0;
+    return RET_NO_ERR;
 }
 
 int files_isDir(char * dirPath) {
     struct stat st;
 
     if (stat(dirPath, &st) != 0) {
-        return 0;
+        return RET_NO_ERR;
     }
     return S_ISDIR(st.st_mode);
 }
@@ -130,7 +135,7 @@ int files_getFileExtension(char * filePath, char * extension) {
         if (filePath[i] == 46) break;
     }
     
-    if (i == strlen(filePath) - 1) return 0;
+    if (i == strlen(filePath) - 1) return RET_NO_ERR;
     strcpy(extension, (char *) (filePath+(i+1)));
     return 1;
 }
