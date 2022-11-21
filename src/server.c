@@ -42,7 +42,7 @@ int server_start(int port) {
                     if(verbose_b) printf("socket created\n");
                     if(pthread_create(&sock_thread, NULL, connection_hndl, (void *) sock_new) < 0) {
                         printf("ERROR: FAILED TO START THREAD\n");
-                        return -1;
+                        return RET_ERR_THREAD;
                     }
                 }
             }

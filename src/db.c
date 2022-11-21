@@ -12,7 +12,7 @@ static int callback (void * a, int b, char ** c, char ** d) {
 }
 
 static int db_execQuery(char * query, char * err) {
-    if (db == 0) return -1;
+    if (db == 0) return RET_ERR_INIT;
 
     sqlite3_exec(db, query, callback, 0, &err);
 
@@ -20,8 +20,8 @@ static int db_execQuery(char * query, char * err) {
 }
 
 int db_init() {
-    if (sqlite3_initialize() != SQLITE_OK) return -1;  /* initialise sqlite3 */
-    if (sqlite3_open("./db/MusicServer.db", &db) == 1) return -1; /* open or create database */
+    if (sqlite3_initialize() != SQLITE_OK) return RET_ERR_INIT;  /* initialise sqlite3 */
+    if (sqlite3_open("./db/MusicServer.db", &db) == 1) return RET_ERR_IO; /* open or create database */
     return RET_NO_ERR;  
 }
 

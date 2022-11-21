@@ -12,7 +12,7 @@ static pthread_t player_thread = (pthread_t) NULL;
 int music_init(void) {
     ao_initialize();
     driver_id = ao_default_driver_id();
-    if(driver_id == -1) return -1;
+    if(driver_id == -1) return RET_ERR_INIT;
     return RET_NO_ERR;
 }
 

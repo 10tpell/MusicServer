@@ -26,7 +26,7 @@ void cfg_addFile(char * filePath) {
 }
 
 int cfg_getFilePathFromId(char * * filePath, int id) {
-    int ret = 1;
+    int ret = RET_ERR_PARAM;
     for (int i = 0; i < music_list->len; i++) {
         printf("%d\n", i);
         if (music_list->music_list[i].id == id) {
@@ -38,8 +38,9 @@ int cfg_getFilePathFromId(char * * filePath, int id) {
 
             strcpy(*filePath, music_list->music_list[i].filepath);
 
-            /* break wasn't working here for some reason */
-            ret = 0;
+            ret = RET_NO_ERR;
+
+            /* break wasn't working here for some reason (so terminated for loop by changing i) */
             i = music_list->len;
         }
     }

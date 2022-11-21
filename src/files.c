@@ -50,13 +50,13 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
 
     if(stat(filePath, &stat_str) == -1) {
         printf("FAILED TO LOAD FILE \n");
-        return -1;
+        return RET_ERR_IO;
     }
     
     file_ptr = fopen(filePath, "r");
     if (NULL == file_ptr) {
         printf("FAILED TO LOAD FILE\n");
-        return -1;
+        return RET_ERR_IO;
     } 
 
     file_str = malloc(FILE_PATH_MAX_LEN);
@@ -135,7 +135,7 @@ int files_getFileExtension(char * filePath, char * extension) {
         if (filePath[i] == 46) break;
     }
     
-    if (i == strlen(filePath) - 1) return RET_NO_ERR;
+    if (i == strlen(filePath) - 1) return RET_ERR_PARAM;
     strcpy(extension, (char *) (filePath+(i+1)));
-    return 1;
+    return RET_NO_ERR;
 }
