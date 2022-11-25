@@ -32,7 +32,7 @@ extern files_music_list * music_list;
 extern global_cfg glb_cfg;
 
 int cfg_getFilePathFromId(char * * filePath, int id);
-void cfg_addFile(char * filePath);
+void cfg_addFile(const char * filePath);
 int cfg_init();
 
 #endif

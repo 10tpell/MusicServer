@@ -33,7 +33,7 @@ int db_writeTrack(char * title, char * artist) {
     len += strlen(title) + strlen(artist);
 
     query = malloc(len * sizeof(char));
-    if(query < 1) return RET_ERR_MALLOC;
+    if(query < (char *) 1) return RET_ERR_MALLOC;
     
     sprintf(query, "INSERT INTO Tracks (Title, Artist) Values ( %s, %s);", title, artist);
     printf("Executing query: %s\n", query);

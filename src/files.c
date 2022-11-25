@@ -85,7 +85,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
 
     file_str = malloc(FILE_PATH_MAX_LEN);
     cfg->music_list = malloc(cfg->capacity * sizeof(files_music_cfg));
-    if((file_str < (char*) 1) || (cfg->music_list < (char* ) 1)) return RET_ERR_MALLOC;
+    if((file_str < (char*) 1) || (cfg->music_list < (files_music_cfg * ) 1)) return RET_ERR_MALLOC;
 
     line_num = 0;
     tmp_x_idx = 0;
@@ -152,7 +152,7 @@ int files_isDir(char * dirPath) {
     return S_ISDIR(st.st_mode);
 }
 
-int files_getFileExtension(char * filePath, char * extension) {
+int files_getFileExtension(const char * filePath, char * extension) {
     int i;
 
     for (i=0; i<strlen(filePath); i++) {

@@ -18,7 +18,7 @@ int files_searchDir(char * dirPath, files_music_list * cfg);
 int files_parseFileList(char * filePath, files_music_list * cfg);
 int files_saveMusicListToFile(files_music_list * cfg, char * filePath);
 int files_isDir(char * dirPath);
-int files_getFileExtension(char * filePath, char * extension);
+int files_getFileExtension(const char * filePath, char * extension);
 void files_clean();
 
 #endif

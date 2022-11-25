@@ -36,7 +36,7 @@ int server_start(int port) {
                     printf("New connection accepted...\n");
 
                     sock_new = malloc(1);
-                    if(sock_new < 1) return RET_ERR_MALLOC;
+                    if(sock_new < (int *) 1) return RET_ERR_MALLOC;
 
                     *sock_new = new_sock;
                     if(verbose_b) printf("socket created\n");

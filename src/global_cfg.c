@@ -29,7 +29,7 @@ int cfg_init() {
     }
 }
 
-void cfg_addFile(char * filePath) {
+void cfg_addFile(const char * filePath) {
     if (music_list->len < music_list->capacity) {
         strcpy(music_list->music_list[music_list->len].filepath, filePath);
         music_list->music_list[music_list->len].id = music_list->music_list[music_list->len-1].id + 1;
@@ -48,7 +48,7 @@ int cfg_getFilePathFromId(char * * filePath, int id) {
 
             /* for some reason it requires a pointer to a pointer for this? */
             *filePath = malloc(strlen(music_list->music_list[i].filepath) * sizeof(char));
-            if(*filePath < 1) return RET_ERR_MALLOC;
+            if(*filePath < (char *) 1) return RET_ERR_MALLOC;
 
             strcpy(*filePath, music_list->music_list[i].filepath);
 
