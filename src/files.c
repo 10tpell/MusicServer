@@ -8,6 +8,7 @@
 
 int ntfw_callback(const char *filepath, const struct stat *info,
                 const int typeflag, struct FTW *pathinfo) {
+    int ret = RET_NO_ERR;
 
     char * fileExt = malloc(8*sizeof(char));
     if(fileExt < (char *) 1) return RET_ERR_MALLOC;
@@ -17,44 +18,21 @@ int ntfw_callback(const char *filepath, const struct stat *info,
     } else if (FTW_F == typeflag ) {
         files_getFileExtension(filepath, fileExt);
         for (int i=0; i<NUM_ALLOWED_EXTENSIONS; i++) {
-            printf("Ext: %s\n", fileExt);
-            printf("Ext: %s, allowedExt[%d]: %s\n", fileExt, i, glb_cfg.allowed_extensions[i]);
             if (strcmp(fileExt, glb_cfg.allowed_extensions[i]) == 0) {
-                printf("Found new file: %s\n", filepath);
                 cfg_addFile(filepath);
             }
         }
     } else {
-        return RET_ERR_IO;
+        ret = RET_ERR_IO;
     }
-    return RET_NO_ERR;
+
+    free(fileExt);
+    return ret;
 }
 
 int files_searchDir(char * dirPath, files_music_list * cfg) {
 
-    return nftw(dirPath, ntfw_callback, 20, 0);
-    /*
-    dr = opendir(dirPath);
-    if(dr) {
-        en = readdir(dr);
-        while (en != NULL) {
-            sprintf(filepath, "%s/%s", dirPath, en->d_name);
-            if (files_isDir(filepath)) {
-                printf("Directory: %s\n", filepath);
-            } else {
-                files_getFileExtension(filepath, fileExt);
-                for (int i=0; i<glb_cfg.num_of_extensions; i++) {
-                    if (strcmp(fileExt, glb_cfg.allowed_extensions[i]) == 0) {
-                        cfg_addFile(filepath);
-                        printf("Found new file: %s\n", filepath);
-                    }
-                }
-                printf("File: %s, extension: %s\n", filepath, fileExt);
-            }
-            en = readdir(dr);
-        }
-    }
-    */
+    return nftw(dirPath, ntfw_callback, 200, 0);
 }
 
 int files_parseFileList(char * filePath, files_music_list * cfg) {
@@ -83,9 +61,12 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
         return RET_ERR_IO;
     } 
 
-    file_str = malloc(FILE_PATH_MAX_LEN);
-    cfg->music_list = malloc(cfg->capacity * sizeof(files_music_cfg));
-    if((file_str < (char*) 1) || (cfg->music_list < (files_music_cfg * ) 1)) return RET_ERR_MALLOC;
+    file_str = malloc(FILE_PATH_MAX_LEN * sizeof(char));
+
+    if (cfg->music_list == (files_music_cfg *) 0) {
+        cfg->music_list = malloc(cfg->capacity * sizeof(files_music_cfg)); /* TODO : Clean up */
+        if((file_str < (char*) 1) || (cfg->music_list < (files_music_cfg * ) 1)) return RET_ERR_MALLOC;
+    }
 
     line_num = 0;
     tmp_x_idx = 0;

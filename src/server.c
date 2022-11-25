@@ -35,7 +35,7 @@ int server_start(int port) {
                 while(new_sock = accept(sock_desc, (struct sockaddr *) &client, &cl_size)) {
                     printf("New connection accepted...\n");
 
-                    sock_new = malloc(1);
+                    sock_new = malloc(1);  /* this is freed at end of connection_hndl */
                     if(sock_new < (int *) 1) return RET_ERR_MALLOC;
 
                     *sock_new = new_sock;

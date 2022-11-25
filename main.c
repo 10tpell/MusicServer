@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
     server_start(options.port);
     music_close();
     server_close();
+    cfg_close();
     //TODO: files_clean();
     exit(0);
 }

@@ -27,6 +27,7 @@ int db_init() {
 
 int db_writeTrack(char * title, char * artist) {
     int len = 48;
+    int ret = RET_NO_ERR;
     char * query;
     char * err;
 
@@ -37,5 +38,9 @@ int db_writeTrack(char * title, char * artist) {
     
     sprintf(query, "INSERT INTO Tracks (Title, Artist) Values ( %s, %s);", title, artist);
     printf("Executing query: %s\n", query);
-    return db_execQuery(query, err);
+
+    ret = db_execQuery(query, err);
+    free(query);
+    
+    return ret;
 }

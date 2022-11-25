@@ -6,6 +6,12 @@
 #include <pthread.h>
 
 #define MUSIC_BUFFER_SIZE 8192
+#define MUSIC_DECODER_LIBSNDFILE 0
+#define MUSIC_DECODER_LIBMPG123 1
+#define MUSIC_DECODER_UNDEFINED 255
+
+#define MUSIC_BITS 8
+
 
 void * player_thread_hndl(void *);
 

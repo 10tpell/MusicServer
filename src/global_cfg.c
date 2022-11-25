@@ -12,12 +12,10 @@ files_music_list * music_list;
 
 global_cfg glb_cfg;
 static const char allowedExt[NUM_ALLOWED_EXTENSIONS][8] = {"wav", "mp3"};
-//     {NUM_ALLOWED_EXTENSIONS,
-//     .allowed_extensions = {"wav", "mp3"} /* TODO: Fix this (BROKEN) */
-// };
 
 int cfg_init() {
-    glb_cfg.allowed_extensions = malloc(NUM_ALLOWED_EXTENSIONS * sizeof(char *));
+    /* init global config */
+    glb_cfg.allowed_extensions = malloc(NUM_ALLOWED_EXTENSIONS * sizeof(char *));       /* freed in cfg_close (its a global innit) */
 
     if(glb_cfg.allowed_extensions < (char **) 1) return RET_ERR_MALLOC;
 
@@ -27,13 +25,29 @@ int cfg_init() {
 
         strcpy(glb_cfg.allowed_extensions[i], allowedExt[i]);
     }
+
+    /* init music_list */
+    music_list = malloc(sizeof(files_music_list));                                      /* ditto */
+    music_list->capacity = MUSIC_LIST_DEFAULT_CAP;
+    music_list->len = 0;
+    music_list->music_list = malloc(sizeof(files_music_cfg) * MUSIC_LIST_DEFAULT_CAP);  /* same again */
+}
+
+void cfg_close() {
+    free(glb_cfg.allowed_extensions);
+    for (int i=0; i<music_list->len; i++) {
+        free(music_list->music_list);
+    }
+    free(music_list->music_list);
 }
 
 void cfg_addFile(const char * filePath) {
     if (music_list->len < music_list->capacity) {
+        music_list->music_list[music_list->len].filepath = malloc((strlen(filePath)+1) * sizeof(char));
         strcpy(music_list->music_list[music_list->len].filepath, filePath);
-        music_list->music_list[music_list->len].id = music_list->music_list[music_list->len-1].id + 1;
+        music_list->music_list[music_list->len].id = music_list->len;
         music_list->len++;
+        if (verbose_b) printf("Added %s to music_list (num: %d)\n", filePath, music_list->len);
     } else {
         /* TODO: handle increasing music capacity */
     }
@@ -42,10 +56,7 @@ void cfg_addFile(const char * filePath) {
 int cfg_getFilePathFromId(char * * filePath, int id) {
     int ret = RET_ERR_PARAM;
     for (int i = 0; i < music_list->len; i++) {
-        printf("%d\n", i);
         if (music_list->music_list[i].id == id) {
-            printf("correct id found\n");
-
             /* for some reason it requires a pointer to a pointer for this? */
             *filePath = malloc(strlen(music_list->music_list[i].filepath) * sizeof(char));
             if(*filePath < (char *) 1) return RET_ERR_MALLOC;

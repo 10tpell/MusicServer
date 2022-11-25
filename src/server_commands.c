@@ -18,18 +18,18 @@ void play_music_path(void * filename) {
         res_music();
         return;
     }
-    music_openFile("/home/travis/Code/MusicServer/resources/test.wav");
+    music_openFile(filename);
     music_play();
     return;
 }
 
 void play_music_id(void * fileId) {
     char * filePath;
-    printf("char: %c\n", fileId);
     int id = atoi((char *)fileId);
     if(cfg_getFilePathFromId(&filePath, id) == 0) {
         play_music_path(filePath);  
     }
+    free(filePath);
     return;  
 }
 

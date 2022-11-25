@@ -2,6 +2,8 @@
 #define GLOBAL_H
 
 #define NUM_ALLOWED_EXTENSIONS 2
+
+#define MUSIC_LIST_DEFAULT_CAP 100
 /************************************************************************************************
  *  Typedefs
 ************************************************************************************************/
@@ -34,5 +36,6 @@ extern global_cfg glb_cfg;
 int cfg_getFilePathFromId(char * * filePath, int id);
 void cfg_addFile(const char * filePath);
 int cfg_init();
+void cfg_close();
 
 #endif
