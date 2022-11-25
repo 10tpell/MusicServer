@@ -10,10 +10,24 @@
 int verbose_b = 0;
 files_music_list * music_list;
 
-global_cfg glb_cfg = {
-    2,
-    { "wav", "mp3" } /* TODO: Fix this (BROKEN) */
-};
+global_cfg glb_cfg;
+static const char allowedExt[NUM_ALLOWED_EXTENSIONS][8] = {"wav", "mp3"};
+//     {NUM_ALLOWED_EXTENSIONS,
+//     .allowed_extensions = {"wav", "mp3"} /* TODO: Fix this (BROKEN) */
+// };
+
+int cfg_init() {
+    glb_cfg.allowed_extensions = malloc(NUM_ALLOWED_EXTENSIONS * sizeof(char *));
+
+    if(glb_cfg.allowed_extensions < (char **) 1) return RET_ERR_MALLOC;
+
+    for(unsigned char i = 0; i < NUM_ALLOWED_EXTENSIONS; i++) {
+        glb_cfg.allowed_extensions[i] = malloc(8 * sizeof(char));
+        if(glb_cfg.allowed_extensions[i] < (char *) 1) return RET_ERR_MALLOC;
+
+        strcpy(glb_cfg.allowed_extensions[i], allowedExt[i]);
+    }
+}
 
 void cfg_addFile(char * filePath) {
     if (music_list->len < music_list->capacity) {

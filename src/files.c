@@ -1,15 +1,39 @@
+#define _XOPEN_SOURCE 500
+
 #include "files.h"
 #include "global_cfg.h"
 #include "errors.h"
+#include <ftw.h>
+
+
+int ntfw_callback(const char *filepath, const struct stat *info,
+                const int typeflag, struct FTW *pathinfo) {
+
+    char * fileExt = malloc(8*sizeof(char));
+    if(fileExt < (char *) 1) return RET_ERR_MALLOC;
+
+    if(FTW_D == typeflag) {
+        printf("Directory %s\n", filepath);
+    } else if (FTW_F == typeflag ) {
+        files_getFileExtension(filepath, fileExt);
+        for (int i=0; i<NUM_ALLOWED_EXTENSIONS; i++) {
+            printf("Ext: %s\n", fileExt);
+            printf("Ext: %s, allowedExt[%d]: %s\n", fileExt, i, glb_cfg.allowed_extensions[i]);
+            if (strcmp(fileExt, glb_cfg.allowed_extensions[i]) == 0) {
+                printf("Found new file: %s\n", filepath);
+                cfg_addFile(filepath);
+            }
+        }
+    } else {
+        return RET_ERR_IO;
+    }
+    return RET_NO_ERR;
+}
 
 int files_searchDir(char * dirPath, files_music_list * cfg) {
-    DIR *dr;
-    struct dirent * en;
 
-    char * filepath = malloc(PATH_MAX * sizeof(char));
-    char * fileExt = malloc(8*sizeof(char));
-    if((filepath < 1) || (fileExt < 1)) return RET_ERR_MALLOC;
-
+    return nftw(dirPath, ntfw_callback, 20, 0);
+    /*
     dr = opendir(dirPath);
     if(dr) {
         en = readdir(dr);
@@ -30,7 +54,7 @@ int files_searchDir(char * dirPath, files_music_list * cfg) {
             en = readdir(dr);
         }
     }
-    return RET_NO_ERR;
+    */
 }
 
 int files_parseFileList(char * filePath, files_music_list * cfg) {
@@ -61,7 +85,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
 
     file_str = malloc(FILE_PATH_MAX_LEN);
     cfg->music_list = malloc(cfg->capacity * sizeof(files_music_cfg));
-    if((file_str < 1) || (cfg->music_list < 1)) return RET_ERR_MALLOC;
+    if((file_str < (char*) 1) || (cfg->music_list < (char* ) 1)) return RET_ERR_MALLOC;
 
     line_num = 0;
     tmp_x_idx = 0;
@@ -72,7 +96,7 @@ int files_parseFileList(char * filePath, files_music_list * cfg) {
             if (current_cfg_param == MUSIC_FILEPATH) {
                 /* TODO: work out where this should be freed */
                 cfg->music_list[cfg->len].filepath = malloc(tmp_x_idx+1);
-                if(cfg->music_list[cfg->len].filepath < 1) return RET_ERR_MALLOC;
+                if(cfg->music_list[cfg->len].filepath < (char*) 1) return RET_ERR_MALLOC;
 
                 memcpy(cfg->music_list[cfg->len].filepath, file_str, tmp_x_idx);
                 

@@ -1,6 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#define NUM_ALLOWED_EXTENSIONS 2
 /************************************************************************************************
  *  Typedefs
 ************************************************************************************************/
@@ -20,8 +21,7 @@ typedef struct {
 
 /* General global config */
 typedef struct {
-    int num_of_extensions;
-    char * allowed_extensions[];
+    char ** allowed_extensions;
 } global_cfg;
 /************************************************************************************************
  *  Global Variables
@@ -33,5 +33,6 @@ extern global_cfg glb_cfg;
 
 int cfg_getFilePathFromId(char * * filePath, int id);
 void cfg_addFile(char * filePath);
+int cfg_init();
 
 #endif

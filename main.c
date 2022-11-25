@@ -18,9 +18,11 @@ void handle_int(int sig);
 ************************************************************************************************/
 int main(int argc, char *argv[]) {
     arg_options options = { "" };
-    parse_args(argc, argv, &options);
     
     signal(SIGINT, handle_int);
+    cfg_init();
+
+    parse_args(argc, argv, &options);
 
     db_init();
     music_init();
